@@ -6,7 +6,7 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\Admin\CourseController;
 use App\Http\Controllers\Api\V1\StudentController;
 use App\Http\Controllers\Api\V1\OrderController;
-use App\Http\Controllers\Api\V1\PaymentController;
+use App\Http\Controllers\Api\V1\PaymentWebhookController as PaymentController;
 use App\Http\Controllers\Api\V1\GradeController;
 
 use App\Http\Controllers\Api\V1\Admin\CategoryController;
@@ -60,6 +60,11 @@ Route::prefix('v1')->group(function () {
     // STUDENT (JWT)
     // =========================
     Route::middleware('jwt.auth')->group(function () {
+        Route::get('me/cart', [OrderController::class, 'cart']);
+        Route::post('me/cart/items', [OrderController::class, 'addCartItem']);
+        Route::delete('me/cart/items/{cursoId}', [OrderController::class, 'removeCartItem']);
+        Route::delete('me/cart', [OrderController::class, 'clearCart']);
+
         Route::get('me/enrollments', [StudentController::class, 'enrollments']);
         Route::get('courses/{id}/content', [StudentController::class, 'courseContent']);
         Route::patch('progress/topics/{temaId}', [StudentController::class, 'updateTopicProgress']);
